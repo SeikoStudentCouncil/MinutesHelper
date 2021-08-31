@@ -1,9 +1,9 @@
 function showDialog(){
   const html = HtmlService.createHtmlOutputFromFile('dialog');
-  SpreadsheetApp.getUi().showModalDialog(html, "議事録作成");
+  DocumentApp.getUi().showModalDialog(html, "議事録作成");
 }
 
 function send(form) {
   const remark = form.remark
-  return false;
+  // DocumentApp.getActiveDocument().getBody().insertParagraph(0, remark);
 }

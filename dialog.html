@@ -4,8 +4,9 @@
     <base target="_top">
   </head>
   <body>
-    <form onsubmit="return google.script.run.send(this);">
+    <form onsubmit="google.script.run.send(this); this.reset();">
       <input name="remark" type="text">
+      <input type="submit">
     </form>
   </body>
 </html>
