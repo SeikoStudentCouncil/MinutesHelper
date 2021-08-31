@@ -4,8 +4,9 @@
     <base target="_top">
   </head>
   <body>
-    <form>
-      <input name="発言者 発言内容" type="text">
+    <form onsubmit="google.script.run.send(this); this.reset();">
+      <input name="remark" type="text">
+      <input type="submit">
     </form>
   </body>
 </html>
