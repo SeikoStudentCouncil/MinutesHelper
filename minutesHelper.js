@@ -23,6 +23,11 @@ function send(form) {
   }
 
   const doc = DocumentApp.getActiveDocument();
+  function setCursorToNext(nextTableRow) {
+    nextTableRow.insertTableCell(0);
+    doc.setCursor(doc.newPosition(nextTableRow.insertTableCell(1), 0));
+  }
+
   const TABLETYPE = DocumentApp.ElementType.TABLE;
   const TABLECELLROW = DocumentApp.ElementType.TABLE_ROW;
   const cursor = doc.getCursor();
@@ -33,8 +38,8 @@ function send(form) {
     let cursorTableRow = cursor.getElement().getParent().getParent();
     if (cursorTableRow.getType() == TABLECELLROW) {
       const cursorTable = cursorTableRow.getParent();
-      doc.setCursor(doc.newPosition(nextTableRow.insertTableCell(1), 0));
       currentTableRow = setPersonAndRemark(cursorTableRow);
+      setCursorToNext(insertNewTableRowBelow(cursorTable, currentTableRow));
       flag = true;
     }
   }
@@ -43,6 +48,10 @@ function send(form) {
     let lastRow = mainTable.getRow(mainTable.getNumRows() - 2);
     insertNewTableRowBelow(mainTable, lastRow);
     setPersonAndRemark(lastRow);
+    setCursorToNext(lastNewRow);
+  }
+}
+
 function insertNewTableRowBelow(table, currentTableRow) {
   return table.insertTableRow(table.getChildIndex(currentTableRow) + 1);
 }
