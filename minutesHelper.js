@@ -17,9 +17,8 @@ function send(form) {
   const doc = DocumentApp.getActiveDocument();
   const TABLETYPE = DocumentApp.ElementType.TABLE;
   const TABLECELLROW = DocumentApp.ElementType.TABLE_ROW;
-  const body = doc.getBody();
   const cursor = doc.getCursor();
-  const mainTable = body.findElement(TABLETYPE, null).getElement();
+  const mainTable = doc.getBody().findElement(TABLETYPE, null).getElement();
   let flag = false;
   if (cursor) {
     const cursorTableRow = cursor.getElement().getParent().getParent();
