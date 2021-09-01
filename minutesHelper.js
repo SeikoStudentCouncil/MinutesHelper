@@ -11,8 +11,16 @@ function showDialog() {
 }
 
 function send(form) {
-  const OFFSET_ROW_INDEX = 5;
   const [person, remark] = form.remark.split(/[\s]/, 2);
+  function setPersonAndRemark(row) {
+    if (row.getCell(1).getText()) {
+      row = insertNewTableRowBelow(mainTable, row);
+      for (i = 0; i < 2; i++) row.insertTableCell(i);
+    }
+    row.getCell(0).setText(person);
+    row.getCell(1).setText(remark);
+    return row;
+  }
 
   const doc = DocumentApp.getActiveDocument();
   const TABLETYPE = DocumentApp.ElementType.TABLE;
@@ -22,24 +30,19 @@ function send(form) {
   clearNullTableRows(mainTable);
   let flag = false;
   if (cursor) {
-    const cursorTableRow = cursor.getElement().getParent().getParent();
+    let cursorTableRow = cursor.getElement().getParent().getParent();
     if (cursorTableRow.getType() == TABLECELLROW) {
       const cursorTable = cursorTableRow.getParent();
-      cursorTableRow.getCell(0).setText(person);
-      cursorTableRow.getCell(1).setText(remark);
-      const nextTableRow = cursorTable.insertTableRow(cursorTable.getChildIndex(cursorTableRow) + 1);
-      nextTableRow.insertTableCell(0);
       doc.setCursor(doc.newPosition(nextTableRow.insertTableCell(1), 0));
+      currentTableRow = setPersonAndRemark(cursorTableRow);
       flag = true;
     }
   }
   if (flag == false) {
     const lastNewRow = mainTable.appendTableRow();
-    const lastRowInd = mainTable.getChildIndex(lastNewRow) - 1;
-    mainTable.getCell(lastRowInd - OFFSET_ROW_INDEX, 0).setText(person);
-    mainTable.getCell(lastRowInd - OFFSET_ROW_INDEX, 1).setText(remark);
-    lastNewRow.insertTableCell(0);
-    doc.setCursor(doc.newPosition(lastNewRow.insertTableCell(1), 0));
+    let lastRow = mainTable.getRow(mainTable.getNumRows() - 2);
+    insertNewTableRowBelow(mainTable, lastRow);
+    setPersonAndRemark(lastRow);
 function insertNewTableRowBelow(table, currentTableRow) {
   return table.insertTableRow(table.getChildIndex(currentTableRow) + 1);
 }
