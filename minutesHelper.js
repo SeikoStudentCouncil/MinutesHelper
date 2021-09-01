@@ -40,6 +40,10 @@ function send(form) {
     mainTable.getCell(lastRowInd - OFFSET_ROW_INDEX, 1).setText(remark);
     lastNewRow.insertTableCell(0);
     doc.setCursor(doc.newPosition(lastNewRow.insertTableCell(1), 0));
+function insertNewTableRowBelow(table, currentTableRow) {
+  return table.insertTableRow(table.getChildIndex(currentTableRow) + 1);
+}
+
   }
 }
 
