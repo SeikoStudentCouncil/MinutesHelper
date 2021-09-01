@@ -19,6 +19,7 @@ function send(form) {
   const TABLECELLROW = DocumentApp.ElementType.TABLE_ROW;
   const cursor = doc.getCursor();
   const mainTable = doc.getBody().findElement(TABLETYPE, null).getElement();
+  clearNullTableRows(mainTable);
   let flag = false;
   if (cursor) {
     const cursorTableRow = cursor.getElement().getParent().getParent();
@@ -43,6 +44,12 @@ function insertNewTableRowBelow(table, currentTableRow) {
   return table.insertTableRow(table.getChildIndex(currentTableRow) + 1);
 }
 
+function clearNullTableRows(table) {
+  const rowsNum = table.getNumRows();
+  for (let r = rowsNum - 1; r >= 0; r--) {
+    var row = ;
+    var cellsNum = ro.getNumCells();
+    if (cellsNum < 2) table.removeRow(r);
   }
 }
 
