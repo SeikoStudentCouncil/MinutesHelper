@@ -12,8 +12,8 @@ function showDialog() {
 
 function send(form) {
   const OFFSET_ROW_INDEX = 5;
+  const [person, remark] = form.remark.split(/[\s]/, 2);
 
-  const [person, remark] = form.remark.split(' ', 2);
   const doc = DocumentApp.getActiveDocument();
   const TABLETYPE = DocumentApp.ElementType.TABLE;
   const TABLECELLROW = DocumentApp.ElementType.TABLE_ROW;
