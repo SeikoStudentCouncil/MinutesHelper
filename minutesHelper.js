@@ -1,3 +1,10 @@
+function onOpen() {
+  const ui = DocumentApp.getUi();
+  ui.createMenu('議事録作成')
+  .addItem('発言入力', 'showDialog')
+  .addToUi();
+}
+
 function showDialog(){
   const html = HtmlService.createHtmlOutputFromFile('dialog');
   DocumentApp.getUi().showModalDialog(html, "議事録作成");
@@ -24,7 +31,7 @@ function send(form) {
       nextTableRow.insertTableCell(0);
       doc.setCursor(doc.newPosition(nextTableRow.insertTableCell(1), 0));
       flag = true;
-    } 
+    }
   }
   if (flag == false) {
     const lastNewRow = mainTable.appendTableRow();
