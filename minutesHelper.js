@@ -59,9 +59,7 @@ function insertNewTableRowBelow(table, currentTableRow) {
 function clearNullTableRows(table) {
   const rowsNum = table.getNumRows();
   for (let r = rowsNum - 1; r >= 0; r--) {
-    var row = ;
-    var cellsNum = ro.getNumCells();
-    if (cellsNum < 2) table.removeRow(r);
+    if (table.getRow(r).getNumCells() < 2) table.removeRow(r);
   }
 }
 
