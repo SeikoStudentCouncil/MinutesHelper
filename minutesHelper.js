@@ -42,3 +42,9 @@ function send(form) {
     doc.setCursor(doc.newPosition(lastNewRow.insertTableCell(1), 0));
   }
 }
+
+function debug() {
+  send({
+    remark: "person remark"
+  });
+}
