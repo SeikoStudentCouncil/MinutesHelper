@@ -1,44 +1,72 @@
 function onOpen() {
   const ui = DocumentApp.getUi();
   ui.createMenu('議事録作成')
-  .addItem('発言入力', 'showDialog')
-  .addToUi();
+    .addItem('発言入力', 'showDialog')
+    .addToUi();
 }
 
-function showDialog(){
+function showDialog() {
   const html = HtmlService.createHtmlOutputFromFile('dialog');
   DocumentApp.getUi().showModalDialog(html, "議事録作成");
 }
 
 function send(form) {
-  const OFFSET_ROW_INDEX = 5;
+  const [person, remark] = form.remark.split(/[\s]/, 2);
+  function setPersonAndRemark(row) {
+    if (row.getCell(1).getText()) {
+      row = insertNewTableRowBelow(mainTable, row);
+      for (i = 0; i < 2; i++) row.insertTableCell(i);
+    }
+    row.getCell(0).setText(person);
+    row.getCell(1).setText(remark);
+    return row;
+  }
 
-  const [person, remark] = form.remark.split(' ', 2);
   const doc = DocumentApp.getActiveDocument();
+  function setCursorToNext(nextTableRow) {
+    nextTableRow.insertTableCell(0);
+    doc.setCursor(doc.newPosition(nextTableRow.insertTableCell(1), 0));
+  }
+
   const TABLETYPE = DocumentApp.ElementType.TABLE;
   const TABLECELLROW = DocumentApp.ElementType.TABLE_ROW;
-  const body = doc.getBody();
   const cursor = doc.getCursor();
-  const mainTable = body.findElement(TABLETYPE, null).getElement();
+  const mainTable = doc.getBody().findElement(TABLETYPE, null).getElement();
+  clearNullTableRows(mainTable);
   let flag = false;
   if (cursor) {
-    const cursorTableRow = cursor.getElement().getParent().getParent();
+    let cursorTableRow = cursor.getElement().getParent().getParent();
     if (cursorTableRow.getType() == TABLECELLROW) {
       const cursorTable = cursorTableRow.getParent();
-      cursorTableRow.getCell(0).setText(person);
-      cursorTableRow.getCell(1).setText(remark);
-      const nextTableRow = cursorTable.insertTableRow(cursorTable.getChildIndex(cursorTableRow) + 1);
-      nextTableRow.insertTableCell(0);
-      doc.setCursor(doc.newPosition(nextTableRow.insertTableCell(1), 0));
+      currentTableRow = setPersonAndRemark(cursorTableRow);
+      setCursorToNext(insertNewTableRowBelow(cursorTable, currentTableRow));
       flag = true;
     }
   }
   if (flag == false) {
     const lastNewRow = mainTable.appendTableRow();
-    const lastRowInd = mainTable.getChildIndex(lastNewRow) - 1;
-    mainTable.getCell(lastRowInd - OFFSET_ROW_INDEX, 0).setText(person);
-    mainTable.getCell(lastRowInd - OFFSET_ROW_INDEX, 1).setText(remark);
-    lastNewRow.insertTableCell(0);
-    doc.setCursor(doc.newPosition(lastNewRow.insertTableCell(1), 0));
+    let lastRow = mainTable.getRow(mainTable.getNumRows() - 2);
+    insertNewTableRowBelow(mainTable, lastRow);
+    setPersonAndRemark(lastRow);
+    setCursorToNext(lastNewRow);
   }
+}
+
+function insertNewTableRowBelow(table, currentTableRow) {
+  return table.insertTableRow(table.getChildIndex(currentTableRow) + 1);
+}
+
+function clearNullTableRows(table) {
+  const rowsNum = table.getNumRows();
+  for (let r = rowsNum - 1; r >= 0; r--) {
+    var row = ;
+    var cellsNum = ro.getNumCells();
+    if (cellsNum < 2) table.removeRow(r);
+  }
+}
+
+function debug() {
+  send({
+    remark: "person remark"
+  });
 }
