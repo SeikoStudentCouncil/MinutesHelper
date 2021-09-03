@@ -11,7 +11,8 @@ function showDialog() {
 }
 
 function send(form) {
-  const [person, remark] = form.remark.split(/[\s]/, 2);
+  const [person, ...tmp] = form.remark.split(/[\s]/),
+    remark = tmp.join('');
   function setPersonAndRemark(row) {
     if (row.getCell(1).getText()) {
       row = insertNewTableRowBelow(mainTable, row);
